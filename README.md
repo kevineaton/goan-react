@@ -4,6 +4,8 @@ A React component for viewing GOAN data
 ## Use
 `npm install --save goan-react`
 
+Ensure you have a GOAN server available to connect to. CORS is setup by the server and the client assumes a valid auth token is provided
+
 ```javascript
 var Goan = require('goan-react');
 ...
@@ -27,8 +29,20 @@ The following props are used to setup the interface:
 - from - The start date for narrowing a selection down - OPTIONAL
 - to - The end date for narrowing a selection down - OPTIONAL
 
+## Docs
+
+Docs are written utilizing YUIDoc, which utilizes a modified form of JSDoc. To generate docs, first ensure you have YUIDoc installed
+
+`npm install -g yuidocjs`
+
+Once installed, run
+
+`yuidoc -e .jsx -o docs .`
+
+This will generate a docs subfolder (ignored in .gitignore) in the current directory.
+
 ## To Do
 
 - [ ] Add unit testing
 - [ ] Add toggle for empty dates
-- [ ] Improve documentation with JSDoc
+- [X] Improve documentation with JSDoc

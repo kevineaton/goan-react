@@ -7,7 +7,20 @@ var $ = require('jQuery');
 var ReactD3 = require('react-d3-components');
 var BarChart = ReactD3.BarChart;
 
+/**
+* GoanChart is a React component that connects to a goan server and displays returned data. It is useful for
+* quick analytics. It will display events by data. Future improvements include showing references and notes
+*
+* @class GoanChart
+*/
 var GoanChart = React.createClass({
+    
+    /**
+    * The initial state of the application, broken into a property in case the state ever needs to be reset
+    *
+    * @property initialState
+    * @type {Object}
+    */
     initialState: {
         from: Moment().subtract(1, "months"),
         to: Moment().add(1, "months"),
@@ -22,6 +35,19 @@ var GoanChart = React.createClass({
         message: "",
     },
     
+    /**
+    * The prop types GoanChart expects to receive
+    *
+    * Will accept the following:
+    * - endPoint - The API endpoint for the GOAN server. For example, https://localhost:44889/v1/ - REQUIRED
+    * - auth - The auth token for your GOAN instance - REQUIRED
+    * - entryType - The default entry type to look up - OPTIONAL 
+    * - from - The start date for narrowing a selection down - OPTIONAL
+    * - to - The end date for narrowing a selection down - OPTIONAL
+    * 
+    * @property propTypes
+    * @type {Object}
+    */
     propTypes: {
         endPoint: React.PropTypes.string.isRequired,
         auth: React.PropTypes.string.isRequired,
@@ -30,10 +56,25 @@ var GoanChart = React.createClass({
         to: React.PropTypes.objectOf(Moment)
     },
     
+    /**
+    * Gets the initial state of the component, a React lifecycle hook
+    *
+    * Immediately returns the blank initial state property
+    *
+    * @method getInitialState
+    */
     getInitialState: function(){
         return this.initialState;
     },
     
+    /**
+    * Once the component mounts, we check the props and update the state. We also get the width of the DOM node to make
+    * the svg chart the correct width
+    *
+    * Once setup, calls getEntries()
+    *
+    * @method componentDidMount
+    */
     componentDidMount: function() {
         var state = this.state;
         state.from = this.props.from && this.props.from !== "" ? this.props.from : state.from;
@@ -46,6 +87,11 @@ var GoanChart = React.createClass({
         this.getEntries();
     },
     
+    /**
+    * Get a list of unique entry types from the Goan server and put them in a selector
+    *
+    * @method getEntries
+    */
     getEntries: function(){
         //we need to get a list of entries
         var schema = this;
@@ -65,7 +111,6 @@ var GoanChart = React.createClass({
             dataType: 'json',
             crossDomain: true,
             success: function (response) {
-                console.log(response);
                 schema.setState({types: response.data}, function(){
                     schema.getData();
                 });
@@ -76,6 +121,15 @@ var GoanChart = React.createClass({
         });
     },
     
+    /**
+    * Gets the entries that occurred between the from and to specified in the state
+    *
+    * Passes the date returned into parseData()
+    *
+    * @todo Add toggle for adding dates with 0 that don't have any entries
+    *
+    * @method getData
+    */
     getData: function() {
         var schema = this;
         var url = this.state.endPoint;
@@ -105,6 +159,11 @@ var GoanChart = React.createClass({
         
     },
     
+    /**
+    * Parses the data returned from getData() into a format for the charting library, currently D3
+    *
+    * @method parseData
+    */
     parseData: function(raw){
         var data = {};
         for(var i = 0; i < raw.length; i++){
@@ -124,7 +183,13 @@ var GoanChart = React.createClass({
         this.setState({data: parsedData});
     },
     
-    changeEntryType: function(event){
+    /**
+    * When the entry type is changed, we get the new type and call into getData() to update the chart. This is called in
+    * the entry type <select>. Once updated, getData() is called
+    *
+    * @method handleChangeEntryType
+    */
+    handleChangeEntryType: function(event){
         var schema = this;
         if(event.target.value !== ""){
             schema.setState({entryType: event.target.value}, function(){
@@ -133,6 +198,12 @@ var GoanChart = React.createClass({
         }
     },
     
+    /**
+    * Handle the change in the from or to DatePicker components. Each DatePicker has a bind in the onChange handler to specify whether
+    * the type is "from" or "to" and then the state is updated and getData() is called
+    *
+    * @method handleChangeInRange
+    */
     handleChangeInRange: function(type, event){
         var schema = this;
         var state = this.state;
@@ -142,8 +213,14 @@ var GoanChart = React.createClass({
         });
     },
     
+    /**
+    * Builds out the selector div at the top of the chart. Contains the entry <select> and two DatePicker components
+    *
+    * Utilized by the render() method
+    *
+    * @method buildSelector
+    */
     buildSelector: function() {
-        
         var entryOptions = [];
         entryOptions.push(<option key={-1} value="">Select an Entry Type</option>);
         for(var i = 0; i < this.state.types.length; i++){
@@ -157,7 +234,7 @@ var GoanChart = React.createClass({
                     Entry Type: <select className="form-control goan-entry-select"
                         value={this.state.entryType}
                         defaultValue={this.state.entryType}
-                        onChange={this.changeEntryType}
+                        onChange={this.handleChangeEntryType}
                         >{entryOptions}</select>
                 </div>
                 <div className="col-md-4 goan-form-container goan-from-select-container">
@@ -176,9 +253,14 @@ var GoanChart = React.createClass({
         );
     },
     
+    /**
+    * Controls the rendering of the component. This will build the top selector container first then, if there is data, display
+    * the chart. If there is an error, such as cannot connect, an error message will show up here as well.
+    *
+    * @method render
+    */
     render: function(){
         var template = (<div>Loading...</div>);
-        //var top = this.buildSelector();
         var top = this.buildSelector();
         var chart = (<div></div>);
         if(this.state.data.length > 0){

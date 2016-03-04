@@ -34,3 +34,7 @@ node_modules
 
 # Don't put the compiled output into source control
 goan.js
+
+# Don't put docs in
+docs
+out
