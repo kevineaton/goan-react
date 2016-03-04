@@ -1,0 +1,26 @@
+{
+  "name": "goan-react",
+  "version": "0.1.0",
+  "description": "A react module for the GOAN web analytics engine",
+  "main": "goan.js",
+  "scripts": {
+    "build": "babel goan.jsx > goan.js",
+    "test": "jsxhint . --exclude node_modules",
+    "prepublish": "npm run test && npm run build"
+  },
+  "author": "Kevin Eaton <kevinhowardeaton@gmail.com> (https://www.kevineaton.net)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kevineaton/goan-react.git"
+  },
+  "bugs": "https://github.com/kevineaton/goan-react/issues",
+  "dependencies": {
+    "jquery": "^2.2.1",
+    "moment": "^2.11.2",
+    "react": "^0.14.7",
+    "react-d3-components": "^0.6.2",
+    "react-datepicker": "^0.23.2",
+    "react-dom": "^0.14.7"
+  }
+}

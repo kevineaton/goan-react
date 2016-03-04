@@ -152,25 +152,25 @@ var GoanChart = React.createClass({
         }
         
         return (
-            <div className="row" style={{marginBottom: "15px"}}>
-                <div className="col-md-4">
+            <div className="row goan-row" style={{marginBottom: "15px"}}>
+                <div className="col-md-4 goan-form-container goan-entry-select-container">
                     Entry Type: <select className="form-control goan-entry-select"
                         value={this.state.entryType}
                         defaultValue={this.state.entryType}
                         onChange={this.changeEntryType}
                         >{entryOptions}</select>
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-4 goan-form-container goan-from-select-container">
                     From: <DatePicker
                             selected={this.state.from}
                             onChange={this.handleChangeInRange.bind(this, "from")} 
-                            className='form-control'/>
+                            className='form-control goan-from-select'/>
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-4 goan-form-container goan-to-select-container">
                     To: <DatePicker
                             selected={this.state.to}
                             onChange={this.handleChangeInRange.bind(this, "to")} 
-                            className='form-control'/>
+                            className='form-control goan-to-select'/>
                 </div>
             </div>
         );
@@ -201,14 +201,14 @@ var GoanChart = React.createClass({
         return (
             <div className="panel panel-default">
                 <div className="panel-body">
-                    <div className="row">
-                        <div className="col-md-12" style={{textAlign: "center"}}>
+                    <div className="row goan-row">
+                        <div className="col-md-12 goan-title-container" style={{textAlign: "center"}}>
                             <strong>Viewing Entries for {this.state.entryType}</strong>
                         </div>
                     </div>
                     {top}
-                    <div className="row">
-                        <div className="col-md-12" style={{textAlign: "center"}}>
+                    <div className="row goan-row">
+                        <div className="col-md-12 goan-chart-container" style={{textAlign: "center"}}>
                             {chart}
                         </div>
                     </div>
