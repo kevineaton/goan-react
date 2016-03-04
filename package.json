@@ -22,5 +22,9 @@
     "react-d3-components": "^0.6.2",
     "react-datepicker": "^0.23.2",
     "react-dom": "^0.14.7"
+  },
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-preset-react": "^6.5.0"
   }
 }
